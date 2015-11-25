@@ -1,3 +1,3 @@
-# Workflows Course
+#Default workflow and automation for web design
 
-This project is an example of workflow
+A workflow design for web design with gulp.js
