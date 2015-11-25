@@ -1,13 +1,13 @@
 {
-  "name": "wkf",
+  "name": "HTML Workflow",
   "version": "0.0.1",
-  "description": "workflows",
+  "description": "An optimized workflow for web design.",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/starshaft/workflows.git"
   },
-  "author": "Mark Bituin",
+  "author": "Christian Mark Bituin",
   "license": "ISC",
   "devDependencies": {
     "gulp": "^3.9.0",
