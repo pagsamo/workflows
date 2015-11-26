@@ -8,6 +8,8 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	minifyHTML = require('gulp-minify-html'),
 	jsonminify = require('gulp-jsonminify'),
+	imagemin = require('gulp-imagemin'),
+	pngcrush = require('imagemin-pngcrush'),
 	concat = require('gulp-concat');
 
 var env, coffeeSources, jsSources, sassSources, htmlSources, jsonSources, outputDir, sassStyle;
@@ -69,23 +71,37 @@ gulp.task('html', function(){
 gulp.task('json', function(){
 	gulp.src('builds/development/js/*.json')
 		.pipe(gulpif(env==='production', jsonminify()))
-		.pipe(gulpif(env==='production', gulp.dest('builds/production/js')))
+		.pipe(gulpif(env==='production', gulp.dest(outputDir)))
 		.pipe(connect.reload());
-})
+});
+
+
+gulp.task('image', function(){
+	gulp.src('builds/development/**/*.*')
+		.pipe(gulpif(env==='production', imagemin({
+			progressive: true,
+			svgoPlugins:[{removeViewBox:false}],
+			use:[pngcrush()]
+		})))
+		.pipe(gulpif(env==='production', gulp.dest(outputDir+'images')))
+		.pipe(connect.reload());
+});
+
 
 gulp.task('connect', function(){
 	connect.server({
 		root: outputDir,
 		livereload: true
 	});
-})
+});
 
 gulp.task('watch', function(){
 	gulp.watch(coffeeSources,['coffee']);
 	gulp.watch(jsSources,['js']);
 	gulp.watch('components/sass/*.scss',['compass']);
 	gulp.watch('builds/development/*.html',['html']);
-	gulp.watch(jsonSources,['json']);
+	gulp.watch('builds/development/*.json',['json']);
+	gulp.watch('builds/development/**/*.*',['images']);
 });
 
-gulp.task('default',['html','json','coffee','js','compass','watch','connect']);
+gulp.task('default',['html','json','coffee','js','compass','image','watch','connect']);
